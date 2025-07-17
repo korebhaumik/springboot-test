@@ -1,21 +1,17 @@
 name: Maven Build
 
-
 permissions:
   contents: write
 
 on:
   push:
-    branches:
-      - main # or your target branch
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     env:
       MAVEN_USERNAME: "korebhaumik"
       MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
@@ -27,8 +23,8 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin" # or 'zulu', 'adopt', etc.
-          java-version: "21" # or 11, 21 based on your project
+          distribution: "temurin"
+          java-version: "21"
 
       - name: Copy custom settings.xml
         run: |
@@ -46,27 +42,29 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      - name: Debug GITHUB_TOKEN
+        run: |
+          if [ -z "$GITHUB_TOKEN" ]; then
+            echo "GITHUB_TOKEN is empty!"
+            exit 1
+          else
+            echo "GITHUB_TOKEN is present."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v1.1.4
         with:
           tag_name: ${{ github.run_id }}
           release_name: Maven Artifact ${{ github.run_id }}
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Debug GITHUB_TOKEN
-        run: |
-          if [ -z "${{ secrets.GITHUB_TOKEN }}" ]; then
-            echo "GITHUB_TOKEN is empty!"
-            exit 1
-          else
-            echo "GITHUB_TOKEN is present."
-          fi
 
       - name: Upload JAR to Release
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./target/todo-0.0.1-SNAPSHOT.jar

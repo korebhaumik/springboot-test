@@ -1,60 +1,39 @@
-name: Maven Build
-
-permissions:
-  contents: write
+name: Build and Deploy
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      MAVEN_USERNAME: "korebhaumik"
-      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # - name: Set up JDK 21
-      #   uses: actions/setup-java@v4
-      #   with:
-      #     distribution: "temurin"
-      #     java-version: "21"
+    # Maven Build
+      - uses: ./.github/actions/maven-build
+        with:
+          java-version: '21'
+    
+    # Upload Maven artifact
+      - name: Upload built JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: ./target/*.jar
 
-      # - name: Copy custom settings.xml
-      #   run: |
-      #     mkdir -p ~/.m2
-      #     cp .github/maven/settings.xml ~/.m2/settings.xml
-
-      # - name: Build with Maven using custom settings
-      #   run: mvn -X clean install --settings ~/.m2/settings.xml
-
-      # - name: Cache Maven packages
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ~/.m2/repository
-      #     key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-maven-
-
-      # - name: Debug GITHUB_TOKEN
-      #   run: |
-      #     if [ -z "$GITHUB_TOKEN" ]; then
-      #       echo "GITHUB_TOKEN is empty!"
-      #       exit 1
-      #     else
-      #       echo "GITHUB_TOKEN is present."
-      #     fi
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: todo-0.0.1-SNAPSHOT.jar
-      #     path: ./target/todo-0.0.1-SNAPSHOT.jar
+    # Download artifact (simulate a clean deploy workspace)
+      - name: Download built JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: ./target
+    
+    # Deploy to ACR
+      - uses: ./.github/actions/deploy-acr
+        with:
+          acr-repository: ${{ secrets.ACR_REPOSITORY }}
+          acr-username: 'acr-admin-token'
+          acr-admin-token: ${{ secrets.ACR_ADMIN_TOKEN }}
+          image-name: ${{secrets.IMAGE_NAME}}
+          image-tag: 'latest'

@@ -26,9 +26,6 @@ runs:
     - name: Show current directory
       run: pwd && ls -l
       shell: bash
-    - name: List target contents
-      run: ls -lh target/
-      shell: bash
     - name: Build Docker image
       run: docker build -t ${{ inputs.acr-repository }}/${{ inputs.image-name }}:${{ inputs.image-tag }} .
       shell: bash

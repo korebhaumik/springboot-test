@@ -18,6 +18,11 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ github.event.workflow_run.head_branch }}
 
+      - name: Download JAR from previous workflow
+        uses: actions/download-artifact@v3
+        with:
+          name: app-jar
+
       - name: Docker login to ACR
         run: |
           docker login -u acr-admin-token -p ${{ secrets.ACR_ADMIN_TOKEN }} ${{ secrets.ACR_REPOSITORY }}

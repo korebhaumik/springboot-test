@@ -41,3 +41,10 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      
+
+      - name: Upload JAR as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-jar
+          path: target/todo-0.0.1-SNAPSHOT.jar  # Update this to your actual JAR path

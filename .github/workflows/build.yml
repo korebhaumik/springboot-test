@@ -1,5 +1,9 @@
 name: Maven Build
 
+
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -51,6 +55,15 @@ jobs:
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Debug GITHUB_TOKEN
+        run: |
+          if [ -z "${{ secrets.GITHUB_TOKEN }}" ]; then
+            echo "GITHUB_TOKEN is empty!"
+            exit 1
+          else
+            echo "GITHUB_TOKEN is present."
+          fi
 
       - name: Upload JAR to Release
         uses: actions/upload-release-asset@v1

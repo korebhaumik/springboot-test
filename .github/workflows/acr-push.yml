@@ -1,5 +1,8 @@
 name: Push Docker Image to ACR
 
+permissions:
+  contents: write
+
 on:
   workflow_run:
     workflows: ["Maven Build"]  # Must match the name in build.yaml

@@ -24,6 +24,7 @@ jobs:
           repo: ${{ github.repository }}
           tag: ${{ github.event.workflow_run.id }}
           file: todo-0.0.1-SNAPSHOT.jar
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Docker login to ACR
         run: |

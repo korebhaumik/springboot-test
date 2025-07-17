@@ -1,0 +1,28 @@
+name: Push Docker Image to ACR
+
+on:
+  workflow_run:
+    workflows: ["Maven Build"]  # Must match the name in build.yaml
+    types:
+      - completed
+
+jobs:
+  push-to-acr:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker login to ACR
+        run: |
+          docker login -u acr-admin-token -p ${{ secrets.ACR_ADMIN_TOKEN }} ${{ secrets.ACR_REPOSITORY }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.ACR_REPOSITORY }}/${{ secrets.IMAGE_NAME }}:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.ACR_REPOSITORY }}/${{ secrets.IMAGE_NAME }}:latest

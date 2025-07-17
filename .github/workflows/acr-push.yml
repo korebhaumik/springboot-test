@@ -21,22 +21,22 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ github.event.workflow_run.head_branch }}
 
-      - name: Download JAR from previous workflow
-        uses: dblock/github-release-download-action@v2
-        with:
-          repo: ${{ github.repository }}
-          tag: ${{ github.event.workflow_run.id }}
-          file: todo-0.0.1-SNAPSHOT.jar
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Download JAR from previous workflow
+      #   uses: dblock/github-release-download-action@v2
+      #   with:
+      #     repo: ${{ github.repository }}
+      #     tag: ${{ github.event.workflow_run.id }}
+      #     file: todo-0.0.1-SNAPSHOT.jar
+      #     token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Docker login to ACR
         run: |
           docker login -u acr-admin-token -p ${{ secrets.ACR_ADMIN_TOKEN }} ${{ secrets.ACR_REPOSITORY }}
 
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.ACR_REPOSITORY }}/${{ secrets.IMAGE_NAME }}:latest .
+      # - name: Build Docker image
+      #   run: |
+      #     docker build -t ${{ secrets.ACR_REPOSITORY }}/${{ secrets.IMAGE_NAME }}:latest .
 
-      - name: Push Docker image
-        run: |
-          docker push ${{ secrets.ACR_REPOSITORY }}/${{ secrets.IMAGE_NAME }}:latest
+      # - name: Push Docker image
+      #   run: |
+      #     docker push ${{ secrets.ACR_REPOSITORY }}/${{ secrets.IMAGE_NAME }}:latest

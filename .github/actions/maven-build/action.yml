@@ -1,0 +1,40 @@
+name: Maven Build
+description: Build and test the Maven project
+
+inputs:
+  java-version:
+    description: 'Java version to use'
+    required: false
+    default: '21'
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: "temurin"
+        java-version: ${{ inputs.java-version }}
+
+    - name: Copy custom settings.xml
+      run: |
+        mkdir -p ~/.m2
+        cp .github/maven/settings.xml ~/.m2/settings.xml
+
+    - name: Build with Maven using custom settings
+      run: mvn -X clean install --settings ~/.m2/settings.xml
+
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: todo-0.0.1-SNAPSHOT.jar
+        path: ./target/todo-0.0.1-SNAPSHOT.jar

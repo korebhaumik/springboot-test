@@ -3,10 +3,9 @@ description: Build and test the Maven project
 
 inputs:
   java-version:
-    description: 'Java version to use'
+    description: "Java version to use"
     required: false
-    default: '21'
-
+    default: "21"
 
 runs:
   using: "composite"
@@ -16,6 +15,7 @@ runs:
       with:
         distribution: "temurin"
         java-version: ${{ inputs.java-version }}
+        shell: bash
 
     - name: Copy custom settings.xml
       run: |
@@ -32,6 +32,7 @@ runs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+        shell: bash
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4

@@ -20,8 +20,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
     - name: Login to ACR
       run: echo "${{ inputs.acr-admin-token }}" | docker login ${{ inputs.acr-repository }} -u ${{ inputs.acr-username }} --password-stdin
       shell: bash

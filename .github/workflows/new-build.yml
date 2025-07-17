@@ -29,6 +29,9 @@ jobs:
           name: app-jar
           path: ./target
     
+      - name: List target contents
+        run: ls -lh target/
+    
     # Deploy to ACR
       - uses: ./.github/actions/deploy-acr
         with:

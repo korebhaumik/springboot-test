@@ -5,7 +5,7 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 
 # Copy the built JAR file into the container
-COPY todo-0.0.1-SNAPSHOT.jar app.jar
+COPY target/todo-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port your application runs on
 EXPOSE 8080

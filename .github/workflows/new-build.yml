@@ -35,5 +35,5 @@ jobs:
           acr-repository: ${{ secrets.ACR_REPOSITORY }}
           acr-username: 'acr-admin-token'
           acr-admin-token: ${{ secrets.ACR_ADMIN_TOKEN }}
-          image-name: secrets.IMAGE_NAME
+          image-name: ${{secrets.IMAGE_NAME}}
           image-tag: 'latest'

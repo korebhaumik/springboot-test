@@ -25,6 +25,9 @@ runs:
     - name: Login to ACR
       run: echo "${{ inputs.acr-admin-token }}" | docker login ${{ inputs.acr-repository }} -u ${{ inputs.acr-username }} --password-stdin
       shell: bash
+    - name: Show current directory
+      run: pwd && ls -l
+      shell: bash
     - name: List target contents
       run: ls -lh target/
       shell: bash

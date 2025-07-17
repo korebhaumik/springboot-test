@@ -15,15 +15,17 @@ runs:
       with:
         distribution: "temurin"
         java-version: ${{ inputs.java-version }}
-        shell: bash
 
     - name: Copy custom settings.xml
       run: |
         mkdir -p ~/.m2
         cp .github/maven/settings.xml ~/.m2/settings.xml
+      shell: bash
+      
 
     - name: Build with Maven using custom settings
       run: mvn -X clean install --settings ~/.m2/settings.xml
+      shell: bash
 
     - name: Cache Maven packages
       uses: actions/cache@v4

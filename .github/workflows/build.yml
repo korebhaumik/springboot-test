@@ -53,21 +53,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1.1.4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ github.run_id }}
-          release_name: Maven Artifact ${{ github.run_id }}
-          draft: false
-          prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload JAR to Release
-        uses: actions/upload-release-asset@v1.0.2
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/todo-0.0.1-SNAPSHOT.jar
-          asset_name: todo-0.0.1-SNAPSHOT.jar
-          asset_content_type: application/java-archive
-          token: ${{ secrets.GITHUB_TOKEN }}
+          name: todo-0.0.1-SNAPSHOT.jar
+          path: ./target/todo-0.0.1-SNAPSHOT.jar

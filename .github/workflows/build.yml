@@ -11,9 +11,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-  env:
-    MAVEN_USERNAME: "korebhaumik"
-    MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+
+    env:
+      MAVEN_USERNAME: "korebhaumik"
+      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
 
     steps:
       - name: Checkout code
